@@ -29,16 +29,16 @@
    },
    {
       "n":"03",
-      "name":"Wilmington University Login",
-      "type":"UI redesign prototype",
+      "name":"CtOS v2.1.0",
+      "type":"This exact site you are on right now...",
       "stack":[
          "HTML",
          "CSS",
          "JavaScript"
       ],
-      "status":"COMPLETE",
-      "url":"https://github.com/D3F4ULT-D3V/Wilmington-University-Improved-Login-Page",
-      "desc":"A redesigned login page for Wilmington University improving accessibility, visual hierarchy, and mobile responsiveness over the original.",
+      "status":"ACTIVE",
+      "url":"https://d3f4ult-d3v.github.io/",
+      "desc":"A terminal interface portfolio website inspired by Watch_Dogs' CtOS.",
       "relatedPost":"ctOS-terminal-aesthetic-web-design"
    },
    {
