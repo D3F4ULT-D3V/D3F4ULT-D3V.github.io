@@ -1,0 +1,39 @@
+[
+   {
+      "slug":"writing-a-system-monitor-in-pure-assembly",
+      "title":"Writing a System Monitor in Pure x86_64 Assembly",
+      "date":"2025-01-15",
+      "excerpt":"No libc. No C runtime. Just NASM, raw syscalls, and /proc. A deep dive into how Assembly-Sysmon reads CPU, memory, load, and network data — and calculates a threat score entirely in hand-rolled machine code.",
+      "tags":[
+         "assembly",
+         "linux",
+         "systems"
+      ],
+      "readTime":"9 min"
+   },
+   {
+      "slug":"ctOS-terminal-aesthetic-web-design",
+      "title":"Building a ctOS-Themed Portfolio with Pure HTML/CSS/JS",
+      "date":"2025-03-01",
+      "excerpt":"How I built this site: scanlines, glitch effects, VT323 fonts, Tumblr surveillance feeds, and a client-side Markdown blog — all on GitHub Pages with zero build tools.",
+      "tags":[
+         "web",
+         "design",
+         "javascript"
+      ],
+      "readTime":"6 min"
+   },
+   {
+      "slug":"rope-physics-in-minecraft-mods",
+      "title":"Porting Verlet Rope Physics to a Minecraft 1.20.1 Fabric Mod",
+      "date":"2025-02-10",
+      "excerpt":"Swing mechanics, UV mapping an 8x16 rope texture, fixing mixin callback types, and debugging lightmap coordinates — notes from building the rope system for the Sync mod.",
+      "tags":[
+         "java",
+         "minecraft",
+         "modding",
+         "physics"
+      ],
+      "readTime":"7 min"
+   }
+]

@@ -1,0 +1,58 @@
+[
+   {
+      "n":"01",
+      "name":"Assembly-Sysmon",
+      "type":"x86_64 system monitor",
+      "stack":[
+         "NASM",
+         "Linux syscalls",
+         "/proc"
+      ],
+      "status":"ACTIVE",
+      "url":"https://github.com/D3F4ULT-D3V/Assembly-Sysmon",
+      "desc":"A bare-metal system monitor written in pure x86_64 assembly. No libc, no C runtime. Reads CPU, memory, load, and network stats directly from /proc using raw Linux syscalls.",
+      "relatedPost":"writing-a-system-monitor-in-pure-assembly"
+   },
+   {
+      "n":"02",
+      "name":"PassGen-98",
+      "type":"password generator",
+      "stack":[
+         "CLI",
+         "entropy",
+         "charset control"
+      ],
+      "status":"COMPLETE",
+      "url":"https://github.com/D3F4ULT-D3V/PassGen-98",
+      "desc":"A lightweight CLI password generator with configurable length, charset inclusion/exclusion, and entropy estimation. Built for speed and minimal dependencies.",
+      "relatedPost":null
+   },
+   {
+      "n":"03",
+      "name":"Wilmington University Login",
+      "type":"UI redesign prototype",
+      "stack":[
+         "HTML",
+         "CSS",
+         "JavaScript"
+      ],
+      "status":"COMPLETE",
+      "url":"https://github.com/D3F4ULT-D3V/Wilmington-University-Improved-Login-Page",
+      "desc":"A redesigned login page for Wilmington University improving accessibility, visual hierarchy, and mobile responsiveness over the original.",
+      "relatedPost":"ctOS-terminal-aesthetic-web-design"
+   },
+   {
+      "n":"04",
+      "name":"First Light Advocacy Website",
+      "type":"nonprofit site prototype",
+      "stack":[
+         "HTML",
+         "CSS",
+         "responsive"
+      ],
+      "status":"COMPLETE",
+      "url":"https://github.com/D3F4ULT-D3V/First-Light-Advocacy-Center-Website-Prototype",
+      "desc":"A fully responsive website prototype for the First Light Advocacy Center. Clean layout, accessible navigation, and mobile-first design.",
+      "relatedPost":null
+   }
+]

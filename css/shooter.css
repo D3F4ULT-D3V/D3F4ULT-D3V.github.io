@@ -1,0 +1,417 @@
+/* ================================================================
+   shooter.css — ASCIItron retro ASCII shooter
+   Ported from asciitron/styles.css — ctOS aesthetic adaptation
+   Self-contained; scoped inside #shooter-overlay
+   ================================================================ */
+
+/* ── Overlay wrapper ─────────────────────────────────────────── */
+#shooter-overlay {
+  position: fixed;
+  inset: 0;
+  top: var(--bar-h, 28px);
+  z-index: 170;
+  display: none;
+  flex-direction: column;
+  font-family: var(--font, 'JetBrains Mono', monospace);
+  background: var(--bg, #0e0e0e);
+
+  /* ── Game-specific color tokens (mapped from ctOS palette) ── */
+  --game-player:        #1bfd9c;   /* success green */
+  --game-bullet:        #D9D9D9;   /* ctosGray */
+  --game-stalker:       #fc3e38;   /* error red */
+  --game-enemy1:        #fc3e38;   /* error red */
+  --game-enemy2:        #c3c3c3;   /* textPrimaryDimmer */
+  --game-enemy3:        #1bfd9c;   /* success green */
+  --game-enemy-bullet:  #fc3e38;   /* error red */
+  --game-mine:          #7a7a7a;   /* textSecondary */
+  --game-panel:         #111111;
+  --game-accent:        #D9D9D9;   /* ctosGray */
+  --game-highlight:     #1bfd9c;   /* success green */
+  --game-warn:          #c3c3c3;
+  --game-title-color:   #1bfd9c;
+}
+#shooter-overlay.open { display: flex; }
+
+/* ── Header bar ──────────────────────────────────────────────── */
+#shooter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 28px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border, #1e1e1e);
+  flex-shrink: 0;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+#shooter-title { color: var(--text-dim, #7a7a7a); }
+#shooter-close-btn {
+  background: none;
+  border: 1px solid var(--border, #1e1e1e);
+  color: var(--text-dim, #7a7a7a);
+  font-family: var(--font, 'JetBrains Mono', monospace);
+  font-size: 11px;
+  padding: 2px 8px;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: all 0.15s;
+}
+#shooter-close-btn:hover { color: var(--game-enemy1); border-color: var(--game-enemy1); }
+
+/* ── Game body ───────────────────────────────────────────────── */
+#shooter-body {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg, #0e0e0e);
+}
+
+/* ── Common screen properties ────────────────────────────────── */
+#start-screen,
+#game-screen,
+#end-screen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--game-panel);
+  border-radius: 2px;
+  width: 80ch;
+  line-height: 1;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  color: #c3c3c3;
+  border: 1px solid #1e1e1e;
+}
+
+/* ── Start screen ────────────────────────────────────────────── */
+#start-screen {
+  text-align: center;
+  font-size: 14px;
+  height: 34em;
+  margin-top: 9px;
+}
+
+/* ── Game screen ─────────────────────────────────────────────── */
+#game-screen {
+  display: none;
+  white-space: pre;
+  font-size: 14px;
+  height: 35em;
+  padding: 0;
+}
+#game-screen.playing { cursor: none; }
+
+/* ── End screen ──────────────────────────────────────────────── */
+#end-screen {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 34em;
+  margin-top: 9px;
+  box-sizing: border-box;
+}
+#end-screen .title-animation {
+  margin-left: 0;
+  display: inline-block;
+  font-size: 11px;
+  margin-bottom: 20px;
+  color: var(--game-enemy1);
+}
+#end-screen .score-display {
+  color: var(--game-highlight);
+  font-size: 22px;
+  margin-top: -6px;
+}
+#end-screen .high-score-alert {
+  color: #c3c3c3;
+  font-size: 14px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  display: none;
+  letter-spacing: 0.15em;
+}
+#end-screen .key-prompt {
+  color: var(--game-accent);
+  font-size: 14px;
+  display: inline-block;
+  margin-top: 20px;
+  letter-spacing: 0.12em;
+}
+#end-screen h2 {
+  font-size: 12px;
+  font-weight: normal;
+  margin-top: -16px;
+  animation: blink 1s infinite;
+  text-align: center;
+  color: var(--game-enemy1);
+}
+#save-score-section { text-align: center; margin-top: 20px; }
+
+/* ── Status text (score/wave row) ────────────────────────────── */
+.status-text {
+  color: var(--game-highlight);
+  position: absolute;
+  margin-left: 10px;
+  background-color: var(--game-panel);
+  width: 100%;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Title art ───────────────────────────────────────────────── */
+.title-animation {
+  text-align: center;
+  font-size: 9px;
+  margin-left: -60px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  animation: titleFadeIn 1.5s ease-in-out both;
+  margin-bottom: 12px;
+  padding-top: 20px;
+  color: #7a7a7a;
+}
+@keyframes titleFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.graphics-animation {
+  text-align: center;
+  font-size: 9px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  animation: graphicsSlideIn 1.5s ease-in-out both, gameHover 4s ease-in-out infinite;
+  animation-delay: 0s, 1.5s;
+  margin-bottom: 28px;
+  color: var(--game-highlight);
+}
+@keyframes graphicsSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes gameHover {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ── Menu options ────────────────────────────────────────────── */
+.menu-options {
+  text-align: center;
+  font-size: 13px;
+  margin-bottom: 22px;
+  animation: fadeIn 1.5s ease-in-out;
+  letter-spacing: 0.08em;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.menu-options span.key   { color: var(--game-accent); }
+.menu-options span.label { color: #c3c3c3; }
+
+.play-prompt {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: var(--game-highlight);
+  letter-spacing: 0.22em;
+  margin-top: 6px;
+}
+
+/* ── Blink + pulse ───────────────────────────────────────────── */
+.blink { animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* ── High score display ──────────────────────────────────────── */
+#high-score-display {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 11px;
+  color: var(--game-mine);
+  z-index: 5;
+  letter-spacing: 0.06em;
+}
+
+/* ── Modals ──────────────────────────────────────────────────── */
+.shooter-modal {
+  display: none;
+  text-align: left;
+  background-color: var(--game-panel);
+  color: #c3c3c3;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  padding: 20px 24px;
+  position: absolute;
+  width: 300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+  border: 1px solid #2e2e2e;
+  z-index: 10;
+  /* corner frame marks */
+  background-image:
+    linear-gradient(#D9D9D9,#D9D9D9) 0    0    / 7px 1px no-repeat,
+    linear-gradient(#D9D9D9,#D9D9D9) 0    0    / 1px 7px no-repeat,
+    linear-gradient(#D9D9D9,#D9D9D9) 100% 0    / 7px 1px no-repeat,
+    linear-gradient(#D9D9D9,#D9D9D9) 100% 0    / 1px 7px no-repeat,
+    linear-gradient(#D9D9D9,#D9D9D9) 0    100% / 7px 1px no-repeat,
+    linear-gradient(#D9D9D9,#D9D9D9) 0    100% / 1px 7px no-repeat,
+    linear-gradient(#D9D9D9,#D9D9D9) 100% 100% / 7px 1px no-repeat,
+    linear-gradient(#D9D9D9,#D9D9D9) 100% 100% / 1px 7px no-repeat;
+}
+.shooter-modal h4 {
+  color: #D9D9D9;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  margin: 0 0 14px;
+  font-weight: 500;
+}
+.shooter-modal p {
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 0;
+  color: #7a7a7a;
+}
+#modal-stats .stat-label { color: #7a7a7a; }
+#modal-stats .stat-value { color: var(--game-highlight); }
+
+/* ── Notification ────────────────────────────────────────────── */
+#game-notification {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--game-panel);
+  border: 1px solid #2e2e2e;
+  padding: 5px 14px;
+  color: #c3c3c3;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 20;
+  pointer-events: none;
+  letter-spacing: 0.06em;
+}
+
+/* ── CRT scan-lines overlay ──────────────────────────────────── */
+#scan-lines {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) perspective(2000px) rotateX(1deg);
+  border-radius: 4px;
+  width: 80ch;
+  height: 35em;
+  line-height: 1;
+  pointer-events: none;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 100px rgba(0,0,0,0.2),
+    inset 0 0 40px rgba(0,0,0,0.15),
+    inset 0 0 20px rgba(0,0,0,0.15),
+    0 0 2px rgba(27,253,156,0.05),
+    0 0 15px rgba(0,0,0,0.15);
+  z-index: 5;
+  border: 1px solid rgba(255,255,255,0.03);
+  background:
+    radial-gradient(
+      circle at center,
+      transparent 0%,
+      rgba(0,0,0,0.04) 60%,
+      rgba(0,0,0,0.08) 100%
+    );
+}
+#scan-lines::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(14,14,14,0) 50%,
+    rgba(14,14,14,0.12) 50%
+  );
+  background-size: 100% 4px;
+  animation: ctScanlines 0.75s linear infinite;
+  pointer-events: none;
+}
+@keyframes ctScanlines {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+#scan-lines::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    linear-gradient(90deg,
+      rgba(252,62,56,0.04),
+      rgba(27,253,156,0.02),
+      rgba(252,62,56,0.04)
+    );
+  background-size: 3px 100%;
+  pointer-events: none;
+  animation: ctFlicker 0.3s infinite;
+}
+@keyframes ctFlicker {
+  0%   { opacity: 0.98; }
+  20%  { opacity: 0.96; }
+  40%  { opacity: 0.97; }
+  60%  { opacity: 0.95; }
+  80%  { opacity: 0.97; }
+  100% { opacity: 0.98; }
+}
+
+/* ── Shooter title logo (replaces backslash ASCII art) ──────── */
+.shooter-title-wrap {
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  margin-bottom: 0;
+  margin-left: 0;
+  animation: titleFadeIn 1.5s ease-in-out both;
+}
+
+.shooter-logo-box {
+  position: relative;
+  padding: 18px 40px 16px;
+  /* CornerFrame-style marks */
+  background-image:
+    linear-gradient(var(--game-accent), var(--game-accent)) 0    0    / 12px 1px no-repeat,
+    linear-gradient(var(--game-accent), var(--game-accent)) 0    0    / 1px 12px no-repeat,
+    linear-gradient(var(--game-accent), var(--game-accent)) 100% 0    / 12px 1px no-repeat,
+    linear-gradient(var(--game-accent), var(--game-accent)) 100% 0    / 1px 12px no-repeat,
+    linear-gradient(var(--game-accent), var(--game-accent)) 0    100% / 12px 1px no-repeat,
+    linear-gradient(var(--game-accent), var(--game-accent)) 0    100% / 1px 12px no-repeat,
+    linear-gradient(var(--game-accent), var(--game-accent)) 100% 100% / 12px 1px no-repeat,
+    linear-gradient(var(--game-accent), var(--game-accent)) 100% 100% / 1px 12px no-repeat;
+  text-align: center;
+}
+
+.shooter-logo-inner { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.shooter-logo-name {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 600;
+  color: var(--game-highlight);
+  letter-spacing: 0.45em;
+  text-shadow: 0 0 20px rgba(27, 253, 156, 0.35), 0 0 40px rgba(27, 253, 156, 0.15);
+  line-height: 1;
+}
+
+.shooter-logo-rule {
+  font-size: 12px;
+  color: #2a2a2a;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.shooter-logo-sub {
+  font-size: 12px;
+  color: #7a7a7a;
+  letter-spacing: 0.32em;
+  font-weight: 300;
+  line-height: 1;
+}

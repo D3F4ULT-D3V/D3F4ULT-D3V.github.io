@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ctOS v2.1.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/ctos.css">
+  <link rel="stylesheet" href="css/tamagotchi.css">
+  <link rel="stylesheet" href="css/shooter.css">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+       LOCKSCREEN
+       ══════════════════════════════════════════════════════════ -->
+  <div id="lockscreen">
+
+    <!-- corner accents (like QML Accents component) -->
+    <div class="ls-accent tl"></div>
+    <div class="ls-accent tr"></div>
+    <div class="ls-accent bl"></div>
+    <div class="ls-accent br"></div>
+
+    <!-- top-left: time display -->
+    <div id="ls-time-block">
+      <div id="ls-clock">----</div>
+      <div id="ls-date-str">------</div>
+    </div>
+
+    <!-- bottom-left: fake terminal log -->
+    <div id="ls-log">
+      <div class="ls-ver-border">blume-krn-1.0.8 &lt;&gt; ctOS-1.0.0-a</div>
+      <div id="ls-log-lines"></div>
+    </div>
+
+    <!-- bottom-right: device id -->
+    <div id="ls-device">
+      <div class="ls-device-line">NODE</div>
+      <div class="ls-device-id">D3F4ULT-NODE</div>
+      <div class="ls-device-line" style="margin-top:8px">ENV</div>
+      <div class="ls-device-env">ctOS-2.1.0</div>
+    </div>
+
+    <!-- top-right: status -->
+    <div id="ls-status">
+      <div class="ls-status-row">
+        <span class="ls-status-dot"></span>
+        <span class="ls-status-lbl">NETWORK</span>
+        <span class="ls-status-val ok">ONLINE</span>
+      </div>
+      <div class="ls-status-row">
+        <span class="ls-status-dot"></span>
+        <span class="ls-status-lbl">CTSD</span>
+        <span class="ls-status-val ok">ACTIVE</span>
+      </div>
+      <div class="ls-status-row">
+        <span class="ls-status-dot"></span>
+        <span class="ls-status-lbl">ACCESS</span>
+        <span class="ls-status-val warn">LOCKED</span>
+      </div>
+    </div>
+
+    <!-- centre: splash + login form -->
+    <div id="ls-centre">
+
+      <!-- splash logo -->
+      <div id="ls-splash" class="cf">
+        <div id="ls-splash-inner">
+          <span class="splash-ct">CT</span><span class="splash-os">OS</span>
+        </div>
+      </div>
+
+      <!-- login form -->
+      <div id="ls-form">
+        <div id="ls-form-inner" class="cf">
+          <div class="lf-label">OPERATOR IDENTIFICATION</div>
+          <div class="lf-field-wrap">
+            <span class="lf-field-prefix">&gt;</span>
+            <input
+              type="text"
+              id="ls-username"
+              class="lf-field"
+              placeholder="username_"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+            >
+          </div>
+          <div id="ls-error" class="lf-error"></div>
+          <div class="lf-buttons">
+            <button id="ls-login-btn" class="lf-btn primary">LOGIN</button>
+            <button id="ls-guest-btn" class="lf-btn secondary">CONTINUE AS GUEST</button>
+          </div>
+        </div>
+        <div id="ls-disclaimer">
+          unauthorised access to this system is prohibited
+          and may be subject to criminal prosecution
+        </div>
+      </div>
+
+    </div><!-- /ls-centre -->
+  </div><!-- /lockscreen -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       BAR  (hidden until login)
+       ══════════════════════════════════════════════════════════ -->
+  <header id="bar" class="hidden">
+
+    <div id="logo">
+      <span class="logo-ct">CT</span><span class="logo-os">OS</span>
+    </div>
+
+    <div id="workspaces">
+      <div class="ws cf active" data-cmd="" title="terminal">
+        <span class="ws-cross"></span>
+        <span class="ws-icon">$</span>
+      </div>
+      <div class="ws-sep"></div>
+      <div class="ws cf" data-cmd="about" title="about">
+        <span class="ws-icon">~</span>
+      </div>
+      <div class="ws-sep"></div>
+      <div class="ws cf" data-cmd="projects" title="projects">
+        <span class="ws-icon">&lt;/&gt;</span>
+      </div>
+      <div class="ws-sep"></div>
+      <div class="ws cf" data-cmd="blog" title="blog">
+        <span class="ws-icon">#</span>
+      </div>
+      <div class="ws-sep"></div>
+      <div class="ws cf" data-cmd="github" title="github">
+        <span class="ws-icon">↗</span>
+      </div>
+    </div>
+
+    <div id="sysinfo">
+      <span id="bar-access-tag" class="si-tag" style="display:none"></span>
+      <span class="si-val" id="si-date">------</span>
+      <span class="si-sep">-</span>
+      <span class="si-val" id="si-time">----</span>
+      <span class="si-sep">-</span>
+      <span class="si-dim si-extra">UP:</span>
+      <span class="si-val" id="si-uptime">00:00:00</span>
+    </div>
+
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TERMINAL
+       ══════════════════════════════════════════════════════════ -->
+  <div id="shell" class="hidden">
+    <div id="output"></div>
+    <div id="input-row">
+      <span id="prompt-sym">$ </span>
+      <input type="text" id="cmd-input"
+             autocomplete="off" autocorrect="off"
+             autocapitalize="off" spellcheck="false">
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       POST VIEWER
+       ══════════════════════════════════════════════════════════ -->
+  <div id="post-viewer">
+    <div id="pv-bar">
+      <span id="pv-title">// TRANSMISSION</span>
+      <button id="pv-close">[ESC] close</button>
+    </div>
+    <div id="pv-meta"></div>
+    <div id="pv-content"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+  <script src="js/sfx.js"></script>
+  <script src="js/tamagotchi.js"></script>
+  <script src="js/shooter.js"></script>
+  <script src="js/terminal.js"></script>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SHOOTER OVERLAY — ASCIItron retro terminal shooter
+       ══════════════════════════════════════════════════════════ -->
+  <div id="shooter-overlay">
+    <div id="shooter-bar">
+      <span id="shooter-title">// ASCIITRON — RETRO TERMINAL SHOOTER</span>
+      <button id="shooter-close-btn">[ESC] close</button>
+    </div>
+    <div id="shooter-body">
+
+      <div id="high-score-display">HS: <span id="display-high-score">0</span></div>
+
+      <!-- Start screen -->
+      <div id="start-screen">
+        <div class="title-animation shooter-title-wrap">
+          <div class="shooter-logo-box">
+            <div class="shooter-logo-corners">
+              <span class="slc tl"></span><span class="slc tr"></span>
+              <span class="slc bl"></span><span class="slc br"></span>
+            </div>
+            <div class="shooter-logo-inner">
+              <div class="shooter-logo-name">ASCIITRON</div>
+              <div class="shooter-logo-rule">──────────────────────────────────</div>
+              <div class="shooter-logo-sub">RETRO  TERMINAL  SHOOTER</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-options">
+          <span class="label">INSTRUCTIONS</span> <span class="key">[Y]</span>
+          &nbsp;&nbsp;
+          <span class="label">STATS</span> <span class="key">[U]</span>
+        </div>
+
+        <pre class="graphics-animation">
+                           /[-])//  ___
+                      __ --\ `_/~--|  / \
+                    /_-/~~--~~ /~~~\\_\ /\
+                    |  |___|===|_-- | \ \ \
+    _/~~~~~~~~|~~\,   ---|---\___/----|  \/\-\
+    ~\________|__/   / // \__ |  ||  / | |   | |
+             ,~-|~~~~~\--, | \|--|/~|||  |   | |
+             [3-|____---~~ _--'==;/ _,   |   |_|
+                         /   /\__|_/  \  \__/--/
+                        /---/_\  -___/ |  /,--|
+                        /  /\/~--|   | |  \///
+                       /  / |-__ \    |/
+                      |--/ /      |-- | \
+                     \^~~\\/\      \   \/- _
+                      \    |  \     |~~\~~| \
+                       \    \  \     \   \  | \
+                         \    \ |     \   \    \
+                          |~~|\/\|     \   \   |
+                         |   |/         \_--_- |\
+                         |  /            /   |/\/
+                          ~~             /  /
+                                        |__/
+        </pre>
+
+        <div class="play-prompt blink">PRESS SPACE TO PLAY</div>
+      </div>
+
+      <!-- Game screen -->
+      <div id="game-screen" aria-live="polite"></div>
+
+      <!-- End screen -->
+      <div id="end-screen">
+        <pre class="title-animation">
+  ________    _____      _____  ___________ ____________
+ /  _____/   /  _  \    /     \ \_   _____/ \_____  \   \  /   /\_   _____/
+/   \  ___  /  /_\  \  /  \ /  \ |    __)_   /   |   \   \/   /  |    __)_
+\    \_\  \/    |    \/    Y    \|        \ /    |    \     /   |        \
+ \______  /\____|__  /\____|__  /_______  / \_______  /\___/   /_______  /
+        \/         \/         \/        \/          \/                 \/
+        </pre>
+        <p class="score-display">Your score: <span id="final-score"></span></p>
+        <p id="new-high-score-message" class="high-score-alert blink">NEW HIGH SCORE</p>
+        <div id="save-score-section">
+          <p class="key-prompt">[R] Restart</p>
+        </div>
+      </div>
+
+      <!-- Notification -->
+      <div id="game-notification"></div>
+
+      <!-- Modals -->
+      <div id="modal-instructions" class="shooter-modal">
+        <h4>// INSTRUCTIONS</h4>
+        <p>
+          WASD: Move<br>
+          Arrow keys: Shoot (4 directions)<br>
+          <br>
+          Survive as many waves as possible.<br>
+          Boss waves every 5 waves.<br>
+          Elite enemies appear in later waves.<br>
+          <br>
+          Stalkers (Ξ) spawn after wave 1 and track you relentlessly (keep moving).
+        </p>
+      </div>
+
+      <div id="modal-stats" class="shooter-modal">
+        <h4>// STATISTICS</h4>
+        <p>
+          <span class="stat-label">High Score:   </span> <span id="stat-highscore" class="stat-value">0</span><br>
+          <span class="stat-label">High Wave:    </span> <span id="stat-highwave"  class="stat-value">0</span><br>
+          <br>
+          <span class="stat-label">Games Played: </span> <span id="stat-games-played" class="stat-value">0</span><br>
+          <span class="stat-label">Total Score:  </span> <span id="stat-total-score"  class="stat-value">0</span>
+        </p>
+      </div>
+
+      <!-- CRT scan-lines effect -->
+      <div id="scan-lines"></div>
+
+    </div>
+  </div>
+</body>
+</html>
