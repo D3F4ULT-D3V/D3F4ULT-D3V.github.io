@@ -23,7 +23,7 @@ The inspiration is Watch\_Dogs' [CtOS](https://watchdogs.fandom.com/wiki/CtOS), 
 - No hero sections, no cards, no grids (in the main interface)
 - Every piece of information is a terminal response to a command
 
-The aesthetic comes from [Tom's](https://github.com/TSM-061) [ctOS interface](https://github.com/TSM-061/ctOS). It's QML codebase I referenced defined the color palette directly:
+The aesthetic comes from [Tom's](https://github.com/TSM-061) [ctOS interface](https://github.com/TSM-061/ctOS). The QML codebase I referenced defined the color palette directly:
 ```
 gray50  #ffffff  -> textPrimary
 gray200 #D9D9D9  -> ctosGray (corner frame accents)
@@ -34,6 +34,7 @@ accentRed   #fc3e38 -> error
 Everything on this site uses those exact values.
 
 ---
+
 ## The Lockscreen
 When you first load the site, you hit a lockscreen before reaching the terminal. This was directly ported from the QML greeter component structure with a clock in the top-left, a status panel in the top-right, a scrolling boot log in the bottom-left, and a device ID in the bottom-right.
 
@@ -47,6 +48,7 @@ The lockscreen boot log uses staggered `setTimeout` with a CSS `opacity` transit
 
 ## The CornerFrame Component
 One of the most visually distinctive elements is the corner bracket decoration on panels that (yet again) comes directly from Tom's ctOS interface's `CornerFrame` component. In QML it's four `Rectangle` elements positioned at each corner. In CSS, I replicated it using eight `background` gradient layers on a single element:
+
 ```css
 .cf {
   --cfc: var(--gray);
@@ -66,7 +68,7 @@ One of the most visually distinctive elements is the corner bracket decoration o
 ## The Top Bar
 The bar is a direct CSS port of the QML bar layout: `[CT]OS` logo | workspaces | system info.
 
-The workspace squares each hold an icon glyph that's visible when inactive (`$`, `~`, `</>`, `#`, `↗`) and replaced by a crosshair when active which is inspired by the `Workspace` component which shows a crosshair in the center when `active: true`. Clicking a workspace runs the corresponding terminal command automatically.
+The workspace squares each hold an icon glyph that's visible when inactive (`$`, `~`, `</>`, `#`, `↗`) and replaced by a crosshair when active, which is inspired by the `Workspace` component which shows a crosshair in the center when `active: true`. Clicking a workspace runs the corresponding terminal command automatically.
 
 The system info block shows `ddMMyy-hhmm` format like the `Clocks` component.
 
@@ -141,10 +143,10 @@ The command sets are plain JS objects. `ADMIN_CMDS = Object.assign({}, GUEST_CMD
 ## The `idle` Command and ASCII Art Gallery
 `idle` opens a fullscreen overlay that shows ASCII braille art. Four pieces are available:
 
-- `idle defalt` - the character Defalt from Watch\_Dogs (the game's hacker antagonist and the inspiration for this whole persona)
-- `idle dedsec` - the DedSec logo from Watch\_Dogs
-- `idle arch` - the Arch Linux logo
-- `idle mask` - a Guy Fawkes-style mask in braille art
+- `idle defalt` — the character Defalt from Watch\_Dogs (the game's hacker antagonist and the inspiration for this whole persona)
+- `idle dedsec` — the DedSec logo from Watch\_Dogs
+- `idle arch` — the Arch Linux logo
+- `idle mask` — a Guy Fawkes-style mask in braille art
 
 The overlay has a live stopwatch that counts up from `00:00:00` the moment idle mode opens, displayed below the art in green with the ctOS success color. This uses a `setInterval` stored on the overlay element itself (`ov._stopwatchInterval`) so `closeIdleViewer()` can clear it cleanly when you exit.
 
@@ -190,7 +192,7 @@ The original used CSS variables from Catppuccin Mocha. These were mapped to ctOS
 
 The CRT scanline effect from the original was kept but recolored so the chromatic aberration lines now use red/green that matches the ctOS error/success colors instead of the original pink/green.
 
-The biggest porting challenge was keyboard event isolation. The shooter's keydown handler (WASD, arrows, Space, R, Y, U) needed to not interfere with the terminal's own keyboard handler. The fix: an `isOpen` flag. Every keydown listener in `shooter.js` begins with `if (!isOpen) return`, meaing the game only processes input when its overlay is visible.
+The biggest porting challenge was keyboard event isolation. The shooter's keydown handler (WASD, arrows, Space, R, Y, U) needed to not interfere with the terminal's own keyboard handler. The fix: an `isOpen` flag. Every keydown listener in `shooter.js` begins with `if (!isOpen) return`, meaning the game only processes input when its overlay is visible.
 
 ---
 
@@ -202,6 +204,57 @@ Three audio files trigger at key moments:
 - `ctos_ui_hover.mp3`: Plays on hover, rate-limited to once per 120ms to prevent machine-gunning
 
 All managed by `js/sfx.js` which preloads audio with `new Audio()` and clones nodes for overlapping playback. Sounds fail silently with `play().catch(() => {})` because browsers block autoplay until user interaction, and the first lockscreen click provides that interaction.
+
+---
+
+## Deploying to GitHub Pages: The MIME Type Problem
+After pushing the site to GitHub and enabling Pages, the blog appeared to work but `fetch()` calls for `.md` and `.json` files were silently failing. The browser was rejecting the responses because GitHub's default branch-based deployment was serving some files with incorrect MIME types, specifically, `.md` files were being served as `text/plain` in some cases rather than letting the browser handle them neutrally, and the stricter fetch checks in certain browsers treated this as an error.
+
+The fix was switching from the default *Deploy from a branch* method to a **GitHub Actions** workflow. GitHub Actions deploys files through a proper artifact pipeline which preserves correct content types across the board.
+
+The workflow at `.github/workflows/static.yml`:
+
+```yaml
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+Steps to activate it:
+
+1. Add `.github/workflows/static.yml` to your repo and push to `main`
+2. Go to **Settings -> Pages** in the repository
+3. Under *Source*, switch from *Deploy from a branch* to **GitHub Actions**
+4. Push any commit to trigger the first Actions run
+
+Once the Actions workflow takes over deployment, `fetch()` works reliably for all static assets (`.md` files, `.json` manifests, audio files, everything).
 
 ---
 
@@ -217,9 +270,10 @@ All managed by `js/sfx.js` which preloads audio with `new Audio()` and clones no
 | Blog content | `.md` files + `index.json` |
 | Project data | `data/projects.json` |
 | Mini-game state | `localStorage` (namespaced) |
+| Deployment | GitHub Actions (`static.yml`) |
 
 Total external runtime dependencies: one font family, one markdown parser. Everything else is hand-written.
 
 ---
 
-The full source is at [D3F4ULT-D3V on GitHub](https://github.com/D3F4ULT-D3V/D3F4ULT-D3V.github.io). The site is built to be edited, add a project by updating `data/projects.json`, publish a post by adding a `.md` file and one entry to `posts/index.json`.
+The full source is at [D3F4ULT-D3V on GitHub](https://github.com/D3F4ULT-D3V/D3F4ULT-D3V.github.io). The site is built to be edited — add a project by updating `data/projects.json`, publish a post by adding a `.md` file and one entry to `posts/index.json`.
