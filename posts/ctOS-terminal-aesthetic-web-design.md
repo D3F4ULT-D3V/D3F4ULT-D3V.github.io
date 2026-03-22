@@ -6,7 +6,7 @@ excerpt: How I built a literal terminal interface inspired by Watch_Dogs, with a
 ---
 
 # Building a ctOS-Themed Portfolio with Pure HTML/CSS/JS
-When I started thinking about a portfolio site, the usual options felt wrong. A generic theme, a React boilerplate, a Notion page... none of it fit. I wanted something that felt like *me*... I used to play a lot of Watch\_Dogs when I was younger, funny enough that's where the `Default` (or `D3F4ULT`) alias comes from. In the game, there is a character named "[Defalt](https://watchdogs.fandom.com/wiki/JB_Markowicz)" who reminded a bit of [Deadmau5](https://en.wikipedia.org/wiki/Deadmau5) so it caught my attention as a EDM kid back in the day.
+When I started thinking about a portfolio site, the usual options felt wrong. A generic theme, a React boilerplate, a Notion page... none of it fit. I wanted something that felt like *me*... I used to play a lot of [Watch\_Dogs](https://en.wikipedia.org/wiki/Watch_Dogs) when I was younger, funny enough that's where the `Default` (or `D3F4ULT`) alias comes from. In the game, there is a character named "[Defalt](https://watchdogs.fandom.com/wiki/JB_Markowicz)" who reminded a bit of [Deadmau5](https://en.wikipedia.org/wiki/Deadmau5) so it caught my attention as a EDM kid back in the day.
 
 Anyway, after beating the campaign, what really stuck with me was the whole hacking system and specifically the UI elements and interfaces. So, after settling that I wanted something more "me" for a portfolio, I went back down Nostalgia Lane and built a ctOS terminal interface. A literal, interactive command-line shell that runs in the browser. Static HTML, CSS, and vanilla JS. Hosted on GitHub Pages. No bundler, no framework, no build step.
 
