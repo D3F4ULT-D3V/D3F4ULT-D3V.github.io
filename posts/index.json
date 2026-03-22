@@ -3,7 +3,7 @@
       "slug":"writing-a-system-monitor-in-pure-assembly",
       "title":"Writing a System Monitor in Pure x86_64 Assembly",
       "date":"2025-01-15",
-      "excerpt":"No libc. No C runtime. Just NASM, raw syscalls, and /proc. A deep dive into how Assembly-Sysmon reads CPU, memory, load, and network data — and calculates a threat score entirely in hand-rolled machine code.",
+      "excerpt":"No libc. No C runtime. Just NASM, raw syscalls, and /proc. A deep dive into how Assembly-Sysmon reads CPU, memory, load, and network data and calculates a threat score entirely in hand-rolled machine code.",
       "tags":[
          "assembly",
          "linux",
@@ -14,8 +14,8 @@
    {
       "slug":"ctOS-terminal-aesthetic-web-design",
       "title":"Building a ctOS-Themed Portfolio with Pure HTML/CSS/JS",
-      "date":"2025-03-01",
-      "excerpt":"How I built this site: scanlines, glitch effects, VT323 fonts, Tumblr surveillance feeds, and a client-side Markdown blog — all on GitHub Pages with zero build tools.",
+      "date":"2026-22-03",
+      "excerpt":"How I built a literal terminal interface inspired by Watch_Dogs, with a lock-screen, two ASCII mini-games, sound effects, a client-side Markdown blog, and zero build tools.",
       "tags":[
          "web",
          "design",
